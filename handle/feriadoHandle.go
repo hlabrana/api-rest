@@ -1,30 +1,12 @@
-package main
+package handle
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
 )
-
-type ApiServer struct {
-	svc Service
-}
-
-func InitApiServer(svc Service) *ApiServer {
-	return &ApiServer{
-		svc: svc,
-	}
-}
-
-func (s *ApiServer) Start(listenAddr string) error {
-	r := mux.NewRouter()
-	r.HandleFunc("/feriados/{anio}", s.handleGetFeriadosByAnio)
-	r.HandleFunc("/feriados-next", s.handleGetNextFeriado)
-	return http.ListenAndServe(listenAddr, r)
-}
 
 func (s *ApiServer) handleGetFeriadosByAnio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -58,10 +40,4 @@ func (s *ApiServer) handleGetNextFeriado(w http.ResponseWriter, r *http.Request)
 
 	WriteJSON(w, http.StatusOK, feriado)
 
-}
-
-func WriteJSON(w http.ResponseWriter, s int, v any) error {
-	w.WriteHeader(s)
-	w.Header().Add("Content-Type", "application/json")
-	return json.NewEncoder(w).Encode(v)
 }

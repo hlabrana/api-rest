@@ -1,23 +1,16 @@
 package main
 
 import (
+	"api-rest/handle"
+	"api-rest/service"
 	"log"
-	"net/http"
 )
-
-type server struct{}
-
-func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message": "Hello World!" }`))
-}
 
 func main() {
 
-	svc := initFeriadosService("https://apis.digital.gob.cl/fl/feriados")
+	svc := service.InitFeriadosService("https://apis.digital.gob.cl/fl/feriados")
 
-	apiServer := InitApiServer(svc)
+	apiServer := handle.InitApiServer(svc)
 	log.Fatal(apiServer.Start(":3030"))
 
 }
